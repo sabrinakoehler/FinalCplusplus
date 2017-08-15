@@ -1,0 +1,108 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+//Price of car = (Price of car + sales tax) - down payment - trade-in 
+double priceCarCalculated (double priceCar, double downPayment, double usertradeValue) {
+    double priceCarCalculated = 0.0;
+    double salesTax = priceCar * 0.06;   //Pennsylvania Sales Tax
+    priceCarCalculated = (priceCar + salesTax) - downPayment - usertradeValue;
+    return priceCarCalculated;
+}
+
+//Calculate monthly payment
+double calculateAPR(double calculatedPrice, double userAPR, int pymtPeriod) {
+    double monthlyPayment = 0.0;
+    double interestRate = userAPR / 100;
+
+    //APR calculated in with monthly payment
+    monthlyPayment = (calculatedPrice * ( interestRate / 12.0) ) / ( 1 - ( pow((1 + interestRate / 12.0),- pymtPeriod)));
+
+    return monthlyPayment;
+}
+
+int main () {
+    int userMake;
+    string userModel = "placeholder";
+    double calculatedPrice = 0.0;
+    double priceCar = 0.0;
+    double userAPR = 0.0;
+    string downpymtAnswer = "placeholder";
+    double downPayment = 0.0;
+    string usertradeAnswer = "placeholder";
+    double usertradeValue = 0.0;
+    int pymtPeriod = 0;
+    double calculatedAPR = 0.0;
+    string userrunAgain = "placeholder";
+    cout.setf(ios::fixed, ios::floatfield); cout.precision(2);
+    bool programLoop = true;
+    
+//Array of cars
+int arrayLength = 7;
+string carArray[7] = {"BRZ", "Legacy", "Impreza", "WRX", "WRX STI","Forester", "CrossTrek"};
+double carPriceArray[7] = {25495.00, 22195.00, 18395.00, 26995.00, 36095.00, 21795.00, 21795.00};
+
+while (programLoop == true ){
+    //What is the make of car? 
+    cout << "What Subaru model would you like?" << endl;
+        for (int i = 0; i < arrayLength; ++i) {
+            cout << i + 1 << ". " << "Model: " << carArray[i] << " Price: $" << carPriceArray[i] << endl;
+        }
+        
+    cout << "Enter the corresponding number: ";    
+    cin >> userMake;
+    userModel = carArray[userMake - 1];
+    priceCar = carPriceArray[userMake - 1];
+    cout << "You selected the " << userModel << endl;
+    
+    //Does user have a down payment? If yes, ask for value.
+    cout << "Do you have a down payment? (Yes or No): ";
+    cin >> downpymtAnswer;
+        if ((downpymtAnswer == "Yes") || (downpymtAnswer == "yes") || (downpymtAnswer == "y")) {
+            cout << "What is your down payment? ";
+            cin >> downPayment;
+        } else {
+            cout << "No down payment. ";
+            downPayment = 0.0;
+        }
+    
+    //Does user have a trade in? If yes, get value.
+    cout << "Do you have a car to trade in? (Yes or No): ";
+    cin >> usertradeAnswer;
+        if ((usertradeAnswer == "Yes") || (usertradeAnswer == "yes") || (usertradeAnswer == "y")) {
+            cout << "What is your trade in worth? ";
+            cin >> usertradeValue;
+        } else {
+            usertradeValue = 0.0;
+        }
+     
+    //What is the payment period desired (in months?)
+    cout << "What is your payment period (in months)?: ";
+    cin >> pymtPeriod;
+    
+    //What is the annual percentage rate? (APR)
+    cout << "What is the desired APR? (i.e. 3.00): ";
+    cin >> userAPR;
+    
+    // After calculations to get payment period spit out the information to user
+    calculatedPrice = priceCarCalculated(priceCar, downPayment, usertradeValue);
+    calculatedAPR = calculateAPR(calculatedPrice, userAPR, pymtPeriod);
+    
+    //Final outputs
+    cout << "Your Subaru " << userModel << " after sales tax, down payment and trade in value is " << priceCarCalculated(priceCar, downPayment, usertradeValue) << endl;
+    cout << "Your estimated monthly payment should be $" << calculatedAPR;
+    cout << " over the course of: " << pymtPeriod << " months." << endl;
+    
+    //Would the user like to run program again?
+    cout << endl;
+    cout << "Would you like to run the program again? (Yes or No): ";
+    cin >> userrunAgain;
+        if ((userrunAgain == "No") || (userrunAgain == "no") || (userrunAgain == "n")) {
+            cout << "Good bye!";
+            programLoop = false; 
+        }
+}
+
+return 0;
+}
